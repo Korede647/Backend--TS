@@ -1,0 +1,33 @@
+{
+   "name": "e-Learning Backend",
+   "main": "index.ts",
+   "scripts": {
+      "start": "ts-node src/index.ts",
+      "dev": "nodemon src/index.ts",
+      "build": "tsc",
+      "generate": "yarn prisma generate",
+      "deploy": "yarn generate && yarn build",
+      "migrate": "yarn prisma migrate deploy && node dist/seeds/seed.js"
+   },
+   "devDependencies": {
+      "@types/bcryptjs": "^2.4.6",
+      "@types/cors": "^2.8.17",
+      "@types/dotenv": "^8.2.3",
+      "@types/express": "^5.0.0",
+      "@types/node": "^22.10.2",
+      "nodemon": "^3.1.9",
+      "ts-node": "^10.9.2",
+      "typescript": "^5.7.2"
+   },
+   "dependencies": {
+      "@prisma/client": "^6.0.1",
+      "bcryptjs": "^2.4.3",
+      "class-transformer": "^0.5.1",
+      "class-validator": "^0.14.1",
+      "cors": "^2.8.5",
+      "dotenv": "^16.4.7",
+      "express": "^4.21.2",
+      "express-validator": "^7.2.0",
+      "prisma": "^6.0.1"
+   }
+}
