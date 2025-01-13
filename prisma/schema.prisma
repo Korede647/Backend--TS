@@ -31,7 +31,7 @@ model User {
 
   // Relations
   Enrollment Enrollment[]
-  instructorEnrollment Enrollment[] @relation(name: "instructorEnrollment")
+  // instructorEnrollment Enrollment[] @relation(name: "instructorEnrollment")
 }
 
 model Course {
@@ -51,13 +51,13 @@ model Enrollment {
   userId    Int
   course    Course           @relation(fields: [courseId], references: [id])
   courseId  Int
-  // instructor User?            @relation(name: "instructorEnrollmeent", fields: [instructorId], references: [id])
+  // instructor User?            @relation(name: "instructorEnrollmentt", fields: [instructorId], references: [id])
   instructorId Int
   status    EnrollmentStatus @default(ACTIVE)
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
 
-  User User[] @relation("instructorEnrollment")
+  // User User[] @relation("instructorEnrollment")
 }
 
 enum Role {

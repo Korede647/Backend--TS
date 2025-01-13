@@ -69,7 +69,7 @@ export class CourseController {
     } 
 
     public deleteCourse = async(
-        req: Request,
+        req: Request,      
         res: Response,
         next: NextFunction
     ): Promise<void> => {
