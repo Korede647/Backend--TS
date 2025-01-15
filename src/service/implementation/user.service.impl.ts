@@ -4,6 +4,7 @@ import { UserService } from "../user-service";
 import { CustomError } from "../../exceptions/customError.error";
 import { db } from "../../config/db";
 import { hashPassword } from "../../utils/password.util";
+import { StatusCodes } from "http-status-codes";
 
 
 export class UserServiceImpl implements UserService{
@@ -62,8 +63,29 @@ export class UserServiceImpl implements UserService{
     }
 
     async deleteUser(id: number): Promise<void> {
-        await db.user.delete({
+       const user = await db.user.findFirst({
             where: { id },
         });
+        if(!user){
+            throw new CustomError(StatusCodes.NOT_FOUND, "User not found")
+        }
+        await db.user.delete({
+            where: { id },
+        })
     }
+
+    async profile(id: number): Promise<Omit<User, "password">> {
+        const user = await db.user.findFirst({
+            where: {
+                id,
+            }
+            });
+            if (!user){
+                throw new CustomError(
+                    StatusCodes.NOT_FOUND,
+                    `user with id ${id} not found`
+                );
+            }
+    return user;
+}
 }
