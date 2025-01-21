@@ -1,10 +1,14 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import passport from "./config/passport.config";
 import userRouter from "./routes/user.route";
 import courseRouter from "./routes/course.route";
 import { errorHandler } from "./utils/errorHandler.util";
 import authRoutes from "./routes/auth.route";
+import session from "express-session";
+import "./config/passport.config"
+
 
 dotenv.config();
 
@@ -29,15 +33,24 @@ const corsOptions = {
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
 };
 
-app.use(cors(corsOptions));
+app.use(session({
+    secret: 'da5rk4mor3al6ly8greym3n',
+    resave: false,
+    saveUninitialized: true,
+    cookie:{
+        maxAge: 1000 * 60 * 60 * 24
+    }   
+}))
 
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/v1/users", userRouter)
-
 app.use("/api/v1/courses", courseRouter)
-
-app.use("api/v1/auth", authRoutes)
+app.use("/api/v1/auth", authRoutes)
 
 app.use(errorHandler);
 

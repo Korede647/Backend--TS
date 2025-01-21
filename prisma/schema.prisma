@@ -20,14 +20,18 @@ enum USER_ROLE {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
-  password  String
-  firstName String?
-  lastName  String?
-  role      USER_ROLE @default(USER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password      String?
+  firstName     String?
+  lastName      String?
+  role          USER_ROLE @default(USER)
+  emailVerified Boolean   @default(false)
+  otp           String?
+  otpExpiry     DateTime?
+  googleId      String?   @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   // Relations
   Enrollment Enrollment[]
@@ -35,27 +39,27 @@ model User {
 }
 
 model Course {
-  id           Int          @id @default(autoincrement())
-  title        String
-  description  String?
-  price        Float
-  duration     Int
-  enrollments  Enrollment[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  price       Float
+  duration    Int
+  enrollments Enrollment[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 }
 
 model Enrollment {
-  id        Int              @id @default(autoincrement())
-  user      User             @relation(fields: [userId], references: [id])
-  userId    Int
-  course    Course           @relation(fields: [courseId], references: [id])
-  courseId  Int
+  id           Int              @id @default(autoincrement())
+  user         User             @relation(fields: [userId], references: [id])
+  userId       Int
+  course       Course           @relation(fields: [courseId], references: [id])
+  courseId     Int
   // instructor User?            @relation(name: "instructorEnrollmentt", fields: [instructorId], references: [id])
   instructorId Int
-  status    EnrollmentStatus @default(ACTIVE)
-  createdAt DateTime         @default(now())
-  updatedAt DateTime         @updatedAt
+  status       EnrollmentStatus @default(ACTIVE)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 
   // User User[] @relation("instructorEnrollment")
 }

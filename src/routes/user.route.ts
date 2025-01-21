@@ -1,13 +1,14 @@
 import express from "express"
 import { UserController } from "../controllers/user.controller";
 import { authenticateUser } from "../middlewares/auth.middleware";
+import isAdmin from "../middlewares/isAdmin";
 
 const userController = new UserController();
 const userRouter = express.Router();
 
-// userRouter.post("/", validateMiddleware(), userController.createUser);
+userRouter.post("/", userController.createUser);
 userRouter.get("/auth/profile", authenticateUser, userController.profile)
-userRouter.get("/", authenticateUser, userController.getAllUsers);
+userRouter.get("/", authenticateUser, isAdmin, userController.getAllUsers);
 userRouter.get("/:id", authenticateUser, userController.getUserById);
 
 userRouter.patch("/:id", authenticateUser, userController.updateUser)
