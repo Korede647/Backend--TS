@@ -42,5 +42,7 @@ authRoutes.get(
         res.redirect("https://www.google.com/")
 
 })
+authRoutes.post("/request-reset-password", authController.requestPasswordReset)
+authRoutes.post("/reset-password", authController.resetPassword)
 
 export default authRoutes

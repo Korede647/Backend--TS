@@ -11,10 +11,79 @@ import { User } from "@prisma/client";
 import { CreateUserDTO } from "../../dto/createUser.dto";
 import { generateOtp } from "../../utils/otp.util";
 import { welcomeEmail, sendOtpEmail } from "../../templates/Email";
+import { ResetPasswordDTO, RequestResetPasswordDTO } from "../../dto/resetPassword.dto";
 
 
 export class AuthServiceImpl implements AuthService{
-    // requestPasswordReset(data: RequestResetPasswordDTO): Promise<void>
+   async requestPasswordReset(
+    data: RequestResetPasswordDTO
+  ): Promise<void>{
+       const user = await db.user.findUnique({
+        where: {
+          email: data.email,
+        },
+       })
+       if(!user){
+        throw new CustomError(StatusCodes.NOT_FOUND, "User with this email does not exist")
+       }
+
+       const resetToken = this.generateAccessToken(user.id, user.firstName || "", user.role)
+
+       await db.user.update({
+        where: {
+          email: data.email,
+        },
+        data: {
+          resetPasswordToken: resetToken,
+          resetPasswordTokenExpiry: new Date(Date.now() + 15 * 60 * 1000)
+        }
+       })
+
+       const resetLink = `${process.env.CLIENT_URL}?token=${resetToken}`
+
+       await sendOtpEmail({
+        to: user.email,
+        subject: "Reset Password",
+        otp: resetLink
+       })
+   }
+
+   async resetPassword(
+    data: ResetPasswordDTO
+  ): Promise<void> {
+       let token: any
+       
+       try{
+        token = Jwt.verify(data.token, process.env.JWT_SECRET || "")
+       }catch(error){
+        throw new CustomError(StatusCodes.BAD_REQUEST, "Invalid or expired token.")
+       }
+
+       const user = await db.user.findUnique({
+        where: {
+           id: token.id,
+        }
+       })
+       if(!user){
+        throw new CustomError(StatusCodes.NOT_FOUND, "User not found.")
+       }
+
+       if(user.resetPasswordTokenExpiry && user.resetPasswordTokenExpiry < new Date()){
+        throw new CustomError(StatusCodes.BAD_REQUEST, "Token has Expired")
+       }
+
+       const hashNewPassword = await hashPassword(data.newPassword);
+       await db.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            password: hashNewPassword,
+            resetPasswordToken: null,
+            resetPasswordTokenExpiry: null
+          },
+       })
+   }
 
     async login(
         data: LoginDTO
@@ -152,6 +221,33 @@ export class AuthServiceImpl implements AuthService{
         );
     
        
+      }
+
+      async updateProfilePic(
+        id: number,
+        data: { profilePic: string }
+      ): Promise<Object | any> {
+        const user = await db.user.findFirst({
+          where: { id },
+        });
+    
+        if (!user) {
+          throw new CustomError(StatusCodes.NOT_FOUND, "User not found");
+        }
+        const updatedUser = await db.user.update({
+          where: {
+            id,
+          },
+          data: { profilePicture: data.profilePic },
+        });
+    
+        //return updateuser without sensitive fileds like password
+        return {
+          id: updatedUser.id,
+          name: updatedUser.firstName,
+          email: updatedUser.email,
+          profilePicture: updatedUser.profilePicture,
+        };
       }
 
 
