@@ -105,7 +105,7 @@ export class UserServiceImpl implements UserService {
       data: { profilePicture: data.profilePic },
     });
 
-    //return updateuser without sensitive fileds like password
+    //return updateuser without sensitive fields like password
     return {
       id: updatedUser.id,
       name: updatedUser.firstName,
