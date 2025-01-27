@@ -17,6 +17,7 @@ userRouter.patch(
     uploadToCloudinaryProfileImage, 
     userController.updateProfilePic 
   );
+userRouter.post("/changePassword", authenticateUser, userController.setPassword)
 
 userRouter.patch("/:id", authenticateUser, userController.updateUser)
 userRouter.delete("/:id", authenticateUser, userController.deleteUser)

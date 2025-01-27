@@ -5,20 +5,24 @@ export class ResetPasswordDTO {
 
     @IsString()
     @IsNotEmpty()
-    newPassword!: string;
-
-    @IsString()
-    token!: string;
+    newPassword!: String;
     
   }
 
-  export class RequestResetPasswordDTO {
-    @IsString()
-    @IsEmail()
-    email!: string;
+  // export class RequestResetPasswordDTO {
+  //   @IsString()
+  //   @IsEmail()
+  //   email!: string;
     
-    // @IsNotEmpty()
-    // @IsString()
-    // @Length(6, 6)
-    // otp!: string;
+  // }
+
+  export class ChangePasswordDTO{
+      @IsNotEmpty()
+      @IsString()
+      oldPassword!: string
+
+      @IsNotEmpty()
+      @IsString()
+      @Length(5, 35)
+      newPassword!: string
   }

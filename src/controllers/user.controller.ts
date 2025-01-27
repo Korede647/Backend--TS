@@ -3,6 +3,7 @@ import { UserServiceImpl } from "../service/implementation/user.service.impl";
 import { CreateUserDTO } from "../dto/createUser.dto";
 import { CustomRequest } from "../middlewares/auth.middleware";
 import { StatusCodes } from "http-status-codes";
+import { ChangePasswordDTO } from "../dto/resetPassword.dto";
 
 
 
@@ -100,6 +101,24 @@ export class UserController {
                 message: "User profile retrieved successfully",
                 data: user,
             });
+    }catch(error){
+        next(error)
+    }
+}
+
+public setPassword = async(
+    req:CustomRequest,
+    res:Response,
+    next:NextFunction
+): Promise<void> =>{
+    try{
+        const id = req.userAuth;
+        const data = req.body as ChangePasswordDTO;
+        const user = await this.userService.setPassword(Number(id), data);
+        res.status(StatusCodes.OK).json({
+            error: false,
+            message: "Password changed successfully",
+        })
     }catch(error){
         next(error)
     }
