@@ -24,7 +24,7 @@ interface ResetPasswordOptions {
   to: string;
   subject: string;
   name: string;
-  resetLink: string;
+  // resetLink: string;
 }
 
 const transporter = nodemailer.createTransport({
@@ -57,8 +57,8 @@ export async function welcomeEmail({ to, subject, name }: WelcomeEmailOptions) {
   });
 }
 
-  export async function sendResetPasswordEmail({ to, subject, name, resetLink}: ResetPasswordOptions){
-    const emailHtml = await render(<ResetPasswordEmail name={name} resetLink={resetLink} />);
+  export async function sendPasswordChangeEmail({ to, subject, name}: ResetPasswordOptions){
+    const emailHtml = await render(<ResetPasswordEmail name={name} />);
     await transporter.sendMail({
       from: `Futurerify <${process.env.SMTP_USER}>`,
       to,

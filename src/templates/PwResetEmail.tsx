@@ -11,12 +11,12 @@ import {
 
 interface ResetPasswordProps {
   name: string;
-  resetLink: string;
+//   resetLink: string;
 }
 
-const ResetPasswordEmail: React.FC<ResetPasswordProps> = ({
+const PasswordChangeEmail: React.FC<ResetPasswordProps> = ({
   name,
-  resetLink,
+  // resetLink,
 }) => {
   return (
     <Html>
@@ -45,30 +45,14 @@ const ResetPasswordEmail: React.FC<ResetPasswordProps> = ({
               marginBottom: "20px",
             }}
           >
-            Reset Your Password
+            Password Change Confirmation
           </Heading>
           <Text style={{ fontSize: "16px", lineHeight: "1.5", color: "#333" }}>
             Hi {name},
           </Text>
           <Text style={{ fontSize: "16px", lineHeight: "1.5", color: "#333" }}>
-            We received a request to reset your password. Click the link below
-            to proceed:
+            You have changed the password to your account recently. This Email is to confirm if this action was taken by you
           </Text>
-          <Link
-            href={resetLink}
-            style={{
-              display: "block",
-              margin: "20px 0",
-              padding: "10px 20px",
-              backgroundColor: "#007BFF",
-              color: "#ffffff",
-              textDecoration: "none",
-              textAlign: "center",
-              borderRadius: "5px",
-            }}
-          >
-            Reset Password
-          </Link>
           <Text style={{ 
             fontSize: "14px", 
             lineHeight: "1.5", 
@@ -82,4 +66,4 @@ const ResetPasswordEmail: React.FC<ResetPasswordProps> = ({
   );
 };
 
-export default ResetPasswordEmail;
+export default PasswordChangeEmail;

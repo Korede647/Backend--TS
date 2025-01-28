@@ -6,6 +6,7 @@ import { db } from "../../config/db";
 import { comparePassword, hashPassword } from "../../utils/password.util";
 import { StatusCodes } from "http-status-codes";
 import { ChangePasswordDTO } from "../../dto/resetPassword.dto";
+import { sendPasswordChangeEmail } from "../../templates/Email";
 
 export class UserServiceImpl implements UserService {
   async createUser(data: CreateUserDTO): Promise<User> {
@@ -173,11 +174,11 @@ export class UserServiceImpl implements UserService {
         }
       }
       
-      // await passwordChangeEmail ({
-      //   to: user.email,
-      //   subject: "Password change"
-        
-      // })
+      await sendPasswordChangeEmail ({
+        to: user.email,
+        subject: "Password Change Verification",
+        name: user.firstName + " " + user.lastName
+      })
       
     });
   }
