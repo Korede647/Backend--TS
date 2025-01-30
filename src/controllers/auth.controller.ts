@@ -3,7 +3,7 @@ import { AuthServiceImpl } from "../service/implementation/auth.service.impl";
 import { LoginDTO } from "../dto/login.dto";
 import { CreateUserDTO } from "../dto/createUser.dto";
 import { VerifyEmailDTO } from "../dto/passwordSet.dto";
-import { ResetPasswordDTO, RequestResetPasswordDTO } from "../dto/resetPassword.dto";
+import { ResetPasswordDTO } from "../dto/resetPassword.dto";
 import { StatusCodes } from "http-status-codes";
 
 export class AuthController{
@@ -63,40 +63,40 @@ export class AuthController{
       };
 
 
-  public requestPasswordReset = async (
-    req: Request, 
-    res: Response,
-    next: NextFunction
-  ): Promise<void> =>{
-    try {
-      const data: RequestResetPasswordDTO = req.body;
-      await this.authService.requestPasswordReset(data);
-      res.status(StatusCodes.OK).json({ 
-        message: "Reset link sent to your email" 
-      });
-    } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
-        message: error 
-      });
-    }
-  }
+  // public requestPasswordReset = async (
+  //   req: Request, 
+  //   res: Response,
+  //   next: NextFunction
+  // ): Promise<void> =>{
+  //   try {
+  //     const data: RequestResetPasswordDTO = req.body;
+  //     await this.authService.requestPasswordReset(data);
+  //     res.status(StatusCodes.OK).json({ 
+  //       message: "Reset link sent to your email" 
+  //     });
+  //   } catch (error) {
+  //     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ 
+  //       message: error 
+  //     });
+  //   }
+  // }
 
-  public resetPassword = async (
-    req: Request, 
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    try {
-      const data = req.body;
-      await this.authService.resetPassword(data);
-      res.status(StatusCodes.OK).json({
-         message: "Password reset successful" 
-        });
-    } catch (error) {
-      console.error(error);
-      res.status(StatusCodes.BAD_REQUEST).json({ 
-        message: "Internal Server Error" 
-      });
-    }
-  }
+  // public resetPassword = async (
+  //   req: Request, 
+  //   res: Response,
+  //   next: NextFunction
+  // ): Promise<void> => {
+  //   try {
+  //     const data = req.body;
+  //     await this.authService.resetPassword(data);
+  //     res.status(StatusCodes.OK).json({
+  //        message: "Password reset successful" 
+  //       });
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(StatusCodes.BAD_REQUEST).json({ 
+  //       message: "Internal Server Error" 
+  //     });
+  //   }
+  // }
 }
