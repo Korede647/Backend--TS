@@ -1,13 +1,16 @@
 {
    "name": "e-Learning Backend",
    "main": "index.ts",
+   "prisma": {
+      "seed": "ts-node --require esbuild-register src/seeds/seed.ts"
+    },  
    "scripts": {
       "start": "ts-node src/index.ts",
       "dev": "nodemon src/index.ts",
       "build": "tsc",
-      "generate": "yarn prisma generate",
-      "deploy": "yarn generate && yarn build",
-      "migrate": "yarn prisma migrate deploy && node dist/seeds/seed.js"
+      "generate": "npx prisma generate",
+      "deploy": "npx generate && npx build",
+      "migrate": "npx prisma migrate deploy && node dist/seeds/seed.js"
    },
    "devDependencies": {
       "@types/bcryptjs": "^2.4.6",
