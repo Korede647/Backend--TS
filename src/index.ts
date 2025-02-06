@@ -8,9 +8,11 @@ import { errorHandler } from "./utils/errorHandler.util";
 import authRoutes from "./routes/auth.route";
 import session from "express-session";
 import "./config/passport.config"
+import deleteUnverifiedUser from "./cronJob/DeleteUnverifiedUsers";
 
 
 dotenv.config();
+deleteUnverifiedUser()
 
 const portEnv = process.env.PORT;
 if(!portEnv){
