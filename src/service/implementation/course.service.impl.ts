@@ -3,6 +3,7 @@ import { CreateCourseDTO } from "../../dto/createCourse.dto";
 import { UserService } from "../course.service";
 import { db } from "../../config/db";
 import { CustomError } from "../../exceptions/customError.error";
+import redisClient from "../../redisClient";
 
 
 export class CourseServiceImpl implements UserService{
@@ -28,6 +29,12 @@ export class CourseServiceImpl implements UserService{
     }
 
     async getCourseById(id: number): Promise<Course | null> {
+        const cacheKey = `course:${id}`
+
+        const cachedCourse = await redisClient.get(cacheKey) 
+        if(cachedCourse){
+            return JSON.parse(cachedCourse)
+        }   
         const course = await db.course.findUnique({
             where : {
                 id,
@@ -36,10 +43,14 @@ export class CourseServiceImpl implements UserService{
         if(!course){
             throw new CustomError (404, `Course with id: ${id} is not found`)
         }
+        if(course){
+            await redisClient.setex(cacheKey, 3600, JSON.stringify(course))
+        }
         return course;
     }
 
     async getAllCourses(): Promise<Course[]> {
+        const cacheKeys = `courses: all`
         return await db.course.findMany()
     }
 
