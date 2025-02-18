@@ -223,32 +223,32 @@ export class AuthServiceImpl implements AuthService{
        
       }
 
-      async updateProfilePic(
-        id: number,
-        data: { profilePic: string }
-      ): Promise<Object | any> {
-        const user = await db.user.findFirst({
-          where: { id },
-        });
+      // async updateProfilePic(
+      //   id: number,
+      //   data: { profilePic: string }
+      // ): Promise<Object | any> {
+      //   const user = await db.user.findFirst({
+      //     where: { id },
+      //   });
     
-        if (!user) {
-          throw new CustomError(StatusCodes.NOT_FOUND, "User not found");
-        }
-        const updatedUser = await db.user.update({
-          where: {
-            id,
-          },
-          data: { profilePicture: data.profilePic },
-        });
+      //   if (!user) {
+      //     throw new CustomError(StatusCodes.NOT_FOUND, "User not found");
+      //   }
+      //   const updatedUser = await db.user.update({
+      //     where: {
+      //       id,
+      //     },
+      //     data: { profilePicture: data.profilePic },
+      //   });
     
-        //return updateuser without sensitive fileds like password
-        return {
-          id: updatedUser.id,
-          name: updatedUser.firstName,
-          email: updatedUser.email,
-          profilePicture: updatedUser.profilePicture,
-        };
-      }
+      //   //return updateuser without sensitive fileds like password
+      //   return {
+      //     id: updatedUser.id,
+      //     name: updatedUser.firstName,
+      //     email: updatedUser.email,
+      //     profilePicture: updatedUser.profilePicture,
+      //   };
+      // }
 
 
        generateAccessToken(userId: number, name: string, role:string): string {

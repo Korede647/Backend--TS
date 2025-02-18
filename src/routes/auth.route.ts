@@ -1,9 +1,7 @@
 import express from "express"
 import { AuthController } from "../controllers/auth.controller";
 import passport from "passport";
-import { StatusCodes } from "http-status-codes";
 import { generateAccessToken, generateRefreshToken } from "../utils/auth.util";
-import { LoginDTO } from "../dto/login.dto";
 
 
 const authController = new AuthController();

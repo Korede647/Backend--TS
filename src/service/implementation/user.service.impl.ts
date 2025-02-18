@@ -7,8 +7,10 @@ import { comparePassword, hashPassword } from "../../utils/password.util";
 import { StatusCodes } from "http-status-codes";
 import { ChangePasswordDTO } from "../../dto/resetPassword.dto";
 import { sendPasswordChangeEmail } from "../../templates/Email";
+import redisClient from "../../redisClient";
 
 export class UserServiceImpl implements UserService {
+
   async createUser(data: CreateUserDTO): Promise<User> {
     const isUserExist = await db.user.findFirst({
       where: {
@@ -33,17 +35,41 @@ export class UserServiceImpl implements UserService {
   }
 
   async getUserById(id: number): Promise<User | null> {
+    const cacheKey = `user:${id}`
+
+    try{
+      const cachedUser= await redisClient.get(cacheKey)
+      if(cachedUser){
+        return JSON.parse(cachedUser)
+      }
     const user = await db.user.findUnique({
       where: { id },
     });
     if (!user) {
       throw new CustomError(404, `User with ${id} does not exist`);
     }
+    if(user){
+      await redisClient.setex(cacheKey, 3600, JSON.stringify(user))
+    }
+
     return user;
+  }catch(error){
+    throw new CustomError(StatusCodes.INTERNAL_SERVER_ERROR, "Error getting user")
+  }
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await db.user.findMany();
+    const cacheKeys = `users: all`
+
+    const cachedUsers = await redisClient.get(cacheKeys)
+    if(cachedUsers){
+      return JSON.parse(cachedUsers)
+    }
+    const users = await db.user.findMany();
+    if(users){
+      await redisClient.setex(cacheKeys, 3600, JSON.stringify(users))
+    }
+    return users
   }
 
   async updateUser(id: number, data: Partial<CreateUserDTO>): Promise<User> {
@@ -75,6 +101,13 @@ export class UserServiceImpl implements UserService {
   }
 
   async profile(id: number): Promise<Omit<User, "password">> {
+    const cacheKey = `user: ${id}`
+
+    const cachedUser = await redisClient.get(cacheKey)
+
+    if(cachedUser){
+      return JSON.parse(cachedUser)
+    }
     const user = await db.user.findFirst({
       where: {
         id,
@@ -85,6 +118,9 @@ export class UserServiceImpl implements UserService {
         StatusCodes.NOT_FOUND,
         `user with id ${id} not found`
       );
+    }
+    if(user){
+      await redisClient.set(cacheKey, JSON.stringify(user))
     }
     return user;
   }
