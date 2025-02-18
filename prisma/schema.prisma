@@ -49,25 +49,24 @@ model Course {
   price       Float
   duration    Int
   enrollments Enrollment[]
-  createdAt   DateTime     @default(now())
+  createdAt   DateTime     @default(now()) @db.Timestamptz(3)
   updatedAt   DateTime     @updatedAt
 }
 
 model Enrollment {
   id                Int              @id @default(autoincrement())
-  user              User             @relation(fields: [userId], references: [id])
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId            Int
-  course            Course           @relation(fields: [courseId], references: [id])
+  course            Course           @relation(fields: [courseId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   courseId          Int
   instructor        User?            @relation(name: "instructorEnrollments", fields: [instructorId], references: [id])
   instructorId      Int?
   status            EnrollmentStatus @default(ACTIVE)
   paymentStatus     PaymentStatus    @default(PENDING)
   paystackReference String?          @unique
-  createdAt         DateTime         @default(now())
+  createdAt         DateTime         @default(now()) @db.Timestamptz(3)
   updatedAt         DateTime         @updatedAt
 
-  // User User[] @relation(name: "instructorEnrollment")
 }
 
 model PasswordHistory {
