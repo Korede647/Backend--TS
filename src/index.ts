@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.route";
 import session from "express-session";
 import "./config/passport.config"
 import deleteUnverifiedUser from "./cronJob/DeleteUnverifiedUsers";
+import enrollmentRouter from "./routes/enrollment.route";
 
 
 dotenv.config();
@@ -53,6 +54,7 @@ app.use(express.json());
 app.use("/api/v1/users", userRouter)
 app.use("/api/v1/courses", courseRouter)
 app.use("/api/v1/auth", authRoutes)
+app.use("/api/v1/enrollments", enrollmentRouter)
 
 app.use(errorHandler);
 
